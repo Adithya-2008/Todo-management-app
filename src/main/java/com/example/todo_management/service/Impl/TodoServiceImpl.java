@@ -52,4 +52,18 @@ public class TodoServiceImpl implements TodoService {
         todoDao.deleteTodoById(todo.getId());
     }
 
+    @Override
+    public void completeTodo(Long id) {
+        Todo todo=todoDao.getTodoById(id);
+        todo.setCompleted(true);
+        todoDao.updateTodo(todo);
+    }
+
+    @Override
+    public void incompleteTodo(Long id) {
+        Todo todo = todoDao.getTodoById(id);
+        todo.setCompleted(false);
+        todoDao.updateTodo(todo);
+    }
+
 }
