@@ -6,6 +6,7 @@ import com.example.todo_management.dto.RegisterDto;
 import com.example.todo_management.Dao.UserDao;
 import com.example.todo_management.entity.Role;
 import com.example.todo_management.entity.User;
+import com.example.todo_management.security.JWTTokenProvider;
 import com.example.todo_management.service.AuthService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,16 +26,20 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final RoleDao roleDao;
     private final AuthenticationManager authenticationManager;
+    private final JWTTokenProvider jwtTokenProvider;
 
     public AuthServiceImpl(
             UserDao userDao,
             PasswordEncoder passwordEncoder,
-            RoleDao roleDao, AuthenticationManager authenticationManager) {
+            RoleDao roleDao,
+            AuthenticationManager authenticationManager,
+            JWTTokenProvider jwtTokenProvider) {
 
         this.userDao = userDao;
         this.passwordEncoder = passwordEncoder;
         this.roleDao = roleDao;
         this.authenticationManager = authenticationManager;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
@@ -86,8 +91,8 @@ public class AuthServiceImpl implements AuthService {
                 loginDto.getPassword()
         ));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        return "User logged in successfully";
+        String token =jwtTokenProvider.generateToken(authentication);
+        return token;
     }
 }
-
 

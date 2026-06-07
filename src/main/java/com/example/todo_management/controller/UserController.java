@@ -1,9 +1,11 @@
 package com.example.todo_management.controller;
 
 
+import com.example.todo_management.dto.JWTAuthResponse;
 import com.example.todo_management.dto.LoginDto;
 import com.example.todo_management.dto.RegisterDto;
 import com.example.todo_management.service.AuthService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,11 +31,10 @@ public class UserController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestBody LoginDto loginDto){
-        return ResponseEntity.ok(
-                authService.login(loginDto)
-        );
+    public ResponseEntity<JWTAuthResponse> loginUser(@RequestBody LoginDto loginDto) {
+        String token = authService.login(loginDto);
+        JWTAuthResponse jwtAuthResponse = new JWTAuthResponse();
+        jwtAuthResponse.setAccessToken(token);
+        return new ResponseEntity<>(jwtAuthResponse, HttpStatus.OK);
     }
-
-
 }
